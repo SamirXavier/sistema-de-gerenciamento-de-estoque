@@ -1,6 +1,24 @@
+
+
+
+
 # 🧾 Documentação — Sistema de Gerenciamento de Estoque
 
+## 🚀 **Como executar o aplicativo**
 
+Para utilizar o sistema, você tem **duas opções**:
+
+* 🟢 **Executar o aplicativo compilado:**
+
+  Rode o executável gerado na pasta `dist/app.exe`.
+
+* 🧩 **Ou executar o código-fonte diretamente (requer Python e dependências):**
+
+  ```bash
+  python app.py
+  ```
+
+---
 
 ## 🏢 **Informações Gerais**
 
@@ -52,8 +70,6 @@ Contém as **regras da aplicação** e realiza a comunicação entre a interface
 
 Responsável pelas operações CRUD da tabela de produtos.
 
-**Métodos:**
-
 | Método                                          | Descrição                                                                        |
 | ----------------------------------------------- | -------------------------------------------------------------------------------- |
 | `cadastrar(nome, descricao, preco, quantidade)` | Insere um novo produto, validando se o nome já existe.                           |
@@ -66,8 +82,6 @@ Responsável pelas operações CRUD da tabela de produtos.
 #### 💰 Classe `Venda`
 
 Gerencia as vendas e faz o controle de estoque associado.
-
-**Métodos:**
 
 | Método                                    | Descrição                                                   |
 | ----------------------------------------- | ----------------------------------------------------------- |
@@ -117,8 +131,6 @@ Gerencia o **acesso e persistência dos dados** via **SQLite**, garantindo que t
 
 ## ⚙️ **Dependências do Projeto**
 
-O projeto utiliza apenas bibliotecas leves:
-
 | Biblioteca  | Função                                  | Instalação               |
 | ----------- | --------------------------------------- | ------------------------ |
 | **flet**    | Criação da interface gráfica            | `pip install flet`       |
@@ -148,6 +160,8 @@ pip install -r requirements.txt
    ```
 
 3. O sistema abrirá automaticamente no navegador ou em uma janela Flet.
+
+💡 *Ou, simplesmente, execute o arquivo `dist/app.exe` se você já gerou o executável com o PyInstaller.*
 
 ---
 
@@ -237,6 +251,5 @@ A integração com Flet proporciona uma interface moderna e intuitiva, adequada 
 * Regras: Controle de estoque e validação de vendas
 
 ---
-
 
 
