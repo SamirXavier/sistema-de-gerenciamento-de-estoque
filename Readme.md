@@ -1,11 +1,3 @@
-
-## Documentação
-
-
-
-
-
-
 # 🧾 Documentação — Sistema de Gerenciamento de Estoque
 
 
