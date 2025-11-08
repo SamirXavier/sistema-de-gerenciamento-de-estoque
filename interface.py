@@ -211,7 +211,3 @@ def main(page: ft.Page):
 
     atualizar_tabela_produtos()
     atualizar_tabela_vendas()
-
-
-# Execução do app
-ft.app(target=main)
