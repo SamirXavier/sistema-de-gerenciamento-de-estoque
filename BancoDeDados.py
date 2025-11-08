@@ -22,8 +22,10 @@ class BancoDeDados:
         # método para conectar ao banco de dados SQLite
         # se o banco de dados não existir, ele será criado    
         try:
-            # cria conexão com o Banco de Dados
+            # cria Conexao com o Banco de Dados
             self.conexaoBD = sqlite3.connect(self.nomeBD)
+            # transforma as linhas em dicionários
+            self.conexaoBD.row_factory = sqlite3.Row
             # cria cursor para executar comandos SQL
             self.cursor = self.conexaoBD.cursor()
             # Ativa o suporte a chaves estrangeiras
@@ -31,22 +33,22 @@ class BancoDeDados:
         except sqlite3.Error as e:
             logging.error(f"Erro ao conectar ao banco de dados: {e}")
         finally:
-            logging.info("Conexão com o banco de dados estabelecida com sucesso.")
+            logging.info("Conexao com o banco de dados estabelecida com sucesso.")
     
     # método para desconectar do banco de dados SQLite
-    # fecha a conexão e o cursor, se estiverem abertos
+    # fecha a Conexao e o cursor, se estiverem abertos
     def desconectar(self):
         if self.conexaoBD:
             try:
                 self.conexaoBD.close()
-                logging.info("Conexão com o banco de dados fechada.")
+                logging.info("Conexao com o banco de dados fechada.")
             except sqlite3.Error as e:
-                logging.error(f"Erro ao fechar a conexão com o banco de dados: {e}")
+                logging.error(f"Erro ao fechar a Conexao com o banco de dados: {e}")
             finally:
                 self.conexaoBD = None
                 self.cursor = None
         else:
-            logging.warning("Tentativa de desconectar sem uma conexão ativa.")
+            logging.warning("Tentativa de desconectar sem uma Conexao ativa.")
     
     #funcao para criar as tabelas Produtos e Vendas no banco de dados
     # as tabelas serão criadas se não existirem/    
@@ -66,6 +68,22 @@ class BancoDeDados:
                     Preco REAL NOT NULL CHECK (Preco >= 0),
                     Quantidade INTEGER NOT NULL CHECK (Quantidade >= 0)
                 );
+                """
+            self.cursor.execute(comando)
+            logging.info("Tabelas criadas com sucesso.")
+        except sqlite3.Error as e:
+            logging.error(f"Erro ao criar as tabelas: {e}")
+        finally:
+            self.desconectar()
+            
+            
+            
+        #conecta ao banco de dados
+        self.conectar()
+        
+        # executa comandos SQL para criar as tabelas no banco de dados
+        try:
+            comando ="""
                 CREATE TABLE IF NOT EXISTS Vendas (
                     id_venda INTEGER PRIMARY KEY AUTOINCREMENT,
                     id_produto INTEGER,
@@ -89,7 +107,19 @@ class BancoDeDados:
 #---------------------------------------------------------------------------------------|operaçoes de produtos no banco de dados|-------------------------------------------------------------------------#
 #                                                                                     # |_______________________________________| #                                                                       #
     
-    
+    def produto_existe(self, nome):
+        try:
+            self.conectar()
+            comando = "SELECT COUNT(*) FROM Produtos WHERE Nome = ?"
+            self.cursor.execute(comando, (nome,))
+            resultado = self.cursor.fetchone()[0]
+            return resultado > 0  # retorna True se já existe
+        except sqlite3.Error as e:
+            logging.error(f"Erro ao verificar se o produto existe: {e}")
+            return False
+        finally:
+            self.desconectar()
+
     
     # funçao para inserir um novo produto na tabela Produtos
     # os parâmetros são: nome, descricao, preco e quantidade
@@ -132,9 +162,13 @@ class BancoDeDados:
             self.cursor.execute(comando)
             # busca todos os produtos na tabela Produtos
             dados_produtos = self.cursor.fetchall()
+            # converte cada linha (sqlite3.Row) em dicionário Python puro
+            produtos = [dict(linha) for linha in dados_produtos]
+            dados_produtos = produtos
         except sqlite3.Error as e:
             logging.error(f"Erro ao listar os produtos: {e}")
         finally:
+            logging.info(f"Produtos listados com sucesso")
             # desconecta do banco de dados
             self.desconectar()
             return dados_produtos
@@ -203,7 +237,7 @@ class BancoDeDados:
 #                                                                                     # |_______________________________________| #                                                                       #
     # função para registrar uma venda na tabela Vendas
     # os parâmetros são: id_produto, quantidade_vendida e valor_total
-    def resgistrar_venda(self, id_produto, quantidade_vendida, valor_total):
+    def registrar_venda(self, id_produto, quantidade_vendida, valor_total):
         try:
             # conecta ao banco de dados
             self.conectar()
@@ -285,7 +319,7 @@ class BancoDeDados:
             self.conectar()
 
             # executa comando sql para excluir uma venda na tabela vendas
-            comando = '''
+            comando = f'''
                 DELETE FROM Vendas WHERE id_venda = ?;
             '''
             # o ID da venda a ser excluída é passado como parâmetro para evitar SQL Injection
@@ -303,5 +337,4 @@ class BancoDeDados:
             # desconecta do banco de dados
             self.desconectar()       
     
- 
             
