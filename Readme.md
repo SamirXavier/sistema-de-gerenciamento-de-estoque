@@ -246,7 +246,5 @@ A integração com Flet proporciona uma interface moderna e intuitiva, adequada 
 
 ---
 
-Quer que eu gere essa documentação em **PDF formatado com capa e sumário**, pronta para entregar (usando o `reportlab`)?
-Posso gerar automaticamente com título, seções e layout profissional.
 
 
